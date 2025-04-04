@@ -5,10 +5,10 @@ describe('samsvi-mdm-patient-list', () => {
   it('renders patient list with correct content', async () => {
     const page = await newSpecPage({
       components: [SamsviMdmPatientList],
-      html: `<samsvi-patient-list></samsvi-patient-list>`,
+      html: `<samsvi-mdm-patient-list></samsvi-mdm-patient-list>`,
     });
 
-    const shadowRoot = page.root.shadowRoot;
+    const shadowRoot = page.root?.shadowRoot!;
 
     // Over nadpis
     const heading = shadowRoot.querySelector('h2');
