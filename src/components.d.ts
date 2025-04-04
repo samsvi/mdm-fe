@@ -20,6 +20,8 @@ export namespace Components {
          */
         "middle": string;
     }
+    interface SamsviMdmPatientList {
+    }
 }
 declare global {
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
@@ -28,8 +30,15 @@ declare global {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLSamsviMdmPatientListElement extends Components.SamsviMdmPatientList, HTMLStencilElement {
+    }
+    var HTMLSamsviMdmPatientListElement: {
+        prototype: HTMLSamsviMdmPatientListElement;
+        new (): HTMLSamsviMdmPatientListElement;
+    };
     interface HTMLElementTagNameMap {
         "my-component": HTMLMyComponentElement;
+        "samsvi-mdm-patient-list": HTMLSamsviMdmPatientListElement;
     }
 }
 declare namespace LocalJSX {
@@ -47,8 +56,11 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
+    interface SamsviMdmPatientList {
+    }
     interface IntrinsicElements {
         "my-component": MyComponent;
+        "samsvi-mdm-patient-list": SamsviMdmPatientList;
     }
 }
 export { LocalJSX as JSX };
@@ -56,6 +68,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "samsvi-mdm-patient-list": LocalJSX.SamsviMdmPatientList & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientListElement>;
         }
     }
 }
