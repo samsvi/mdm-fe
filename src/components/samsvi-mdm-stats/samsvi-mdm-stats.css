@@ -1,0 +1,39 @@
+.stats-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  flex: 1 1 220px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-info h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.stat-info p {
+  margin: 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .stats-cards {
+    flex-direction: column;
+  }
+
+  .stat-card {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+}

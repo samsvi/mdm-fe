@@ -1,4 +1,4 @@
-import { Component, Host, h , State} from '@stencil/core';
+import { Component, h } from '@stencil/core';
 
 @Component({
   tag: 'samsvi-mdm-patient-list',
@@ -6,25 +6,12 @@ import { Component, Host, h , State} from '@stencil/core';
   shadow: true,
 })
 export class SamsviMdmPatientList {
-  @State() patients = [
-    { id: 1, name: 'Jozef Novak' },
-    { id: 2, name: 'Janko Hrasko' },
-  ];
-
   render() {
     return (
-      <Host>
-        <div class="card">
-          <h2>Zoznam pacientov</h2>
-          <ul>
-            {this.patients.map((patient) => (
-              <li>
-                <md-outlined-button>{patient.name}</md-outlined-button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Host>
+      <div class="waccare-container">
+        <samsvi-mdm-sidebar></samsvi-mdm-sidebar>
+        <samsvi-mdm-main-content></samsvi-mdm-main-content>
+      </div>
     );
   }
 }
