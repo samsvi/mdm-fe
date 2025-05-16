@@ -90,3 +90,32 @@ td {
     display: none;
   }
 }
+
+.actions-container {
+  position: relative;
+  display: inline-block;
+}
+
+.action-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  z-index: 10;
+  padding: 4px 0;
+}
+
+.action-menu button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.action-menu button:hover {
+  background-color: #f0f0f0;
+}

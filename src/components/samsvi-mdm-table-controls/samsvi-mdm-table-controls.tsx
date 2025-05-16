@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, Event, EventEmitter } from '@stencil/core';
+import { Component, Host, h, Prop, Event, EventEmitter, Element } from '@stencil/core';
 
 @Component({
   tag: 'samsvi-mdm-table-controls',
@@ -7,11 +7,19 @@ import { Component, Host, h, Prop, Event, EventEmitter } from '@stencil/core';
 })
 export class SamsviMdmTableControls {
   @Prop() selectedStatus: string = 'all';
+  @Element() el: HTMLElement;
   @Event() statusFilterChanged: EventEmitter<string>;
 
   handleStatusChange(event) {
     this.statusFilterChanged.emit(event.target.value);
   }
+
+  handleAddPatient = () => {
+    const modalElement = document.querySelector('samsvi-mdm-patient-modal') as HTMLElement & { openModal: () => Promise<void> };
+    if (modalElement) {
+      modalElement.openModal();
+    }
+  };
 
   render() {
     return (
@@ -37,7 +45,7 @@ export class SamsviMdmTableControls {
               </md-select-option>
             </md-filled-select>
 
-            <md-filled-button class="add-patient-button">
+            <md-filled-button class="add-patient-button" onClick={this.handleAddPatient}>
               <md-icon slot="icon">add</md-icon>
               Add patient
             </md-filled-button>

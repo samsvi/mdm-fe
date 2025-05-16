@@ -8,8 +8,8 @@ import '@material/web/select/filled-select';
 import '@material/web/select/select-option';
 import '@material/web/divider/divider';
 import '@material/web/iconbutton/filled-icon-button';
+import { registerNavigationApi } from './navigation.js';
 
 export default function () {
-  // or export default async function()
-  // package initialization code
+  registerNavigationApi();
 }
