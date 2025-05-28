@@ -23,7 +23,7 @@
 }
 
 .add-patient-button {
-  background-color: #007bff;
+  --md-filled-button-container-color: #0066cc;
   color: white;
 }
 

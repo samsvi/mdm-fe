@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, h, Host } from '@stencil/core';
 
 @Component({
   tag: 'samsvi-mdm-patient-list',
@@ -8,10 +8,12 @@ import { Component, h } from '@stencil/core';
 export class SamsviMdmPatientList {
   render() {
     return (
-      <div class="waccare-container">
-        <samsvi-mdm-sidebar></samsvi-mdm-sidebar>
-        <samsvi-mdm-main-content></samsvi-mdm-main-content>
-      </div>
+      <Host>
+        <div class="waccare-container">
+          <samsvi-mdm-sidebar></samsvi-mdm-sidebar>
+          <samsvi-mdm-main-content></samsvi-mdm-main-content>
+        </div>
+      </Host>
     );
   }
 }

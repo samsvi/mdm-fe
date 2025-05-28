@@ -32,6 +32,16 @@ export namespace Components {
         "isMobileView": boolean;
         "patients": any[];
     }
+    interface SamsviMdmRecordModal {
+        /**
+          * Closes the modal dialog
+         */
+        "closeModal": () => Promise<void>;
+        /**
+          * Opens the modal dialog
+         */
+        "openModal": () => Promise<void>;
+    }
     interface SamsviMdmSidebar {
     }
     interface SamsviMdmStats {
@@ -107,6 +117,12 @@ declare global {
         prototype: HTMLSamsviMdmPatientsTableElement;
         new (): HTMLSamsviMdmPatientsTableElement;
     };
+    interface HTMLSamsviMdmRecordModalElement extends Components.SamsviMdmRecordModal, HTMLStencilElement {
+    }
+    var HTMLSamsviMdmRecordModalElement: {
+        prototype: HTMLSamsviMdmRecordModalElement;
+        new (): HTMLSamsviMdmRecordModalElement;
+    };
     interface HTMLSamsviMdmSidebarElement extends Components.SamsviMdmSidebar, HTMLStencilElement {
     }
     var HTMLSamsviMdmSidebarElement: {
@@ -144,6 +160,7 @@ declare global {
         "samsvi-mdm-patient-list": HTMLSamsviMdmPatientListElement;
         "samsvi-mdm-patient-modal": HTMLSamsviMdmPatientModalElement;
         "samsvi-mdm-patients-table": HTMLSamsviMdmPatientsTableElement;
+        "samsvi-mdm-record-modal": HTMLSamsviMdmRecordModalElement;
         "samsvi-mdm-sidebar": HTMLSamsviMdmSidebarElement;
         "samsvi-mdm-stats": HTMLSamsviMdmStatsElement;
         "samsvi-mdm-table-controls": HTMLSamsviMdmTableControlsElement;
@@ -169,6 +186,8 @@ declare namespace LocalJSX {
         "isMobileView"?: boolean;
         "patients"?: any[];
     }
+    interface SamsviMdmRecordModal {
+    }
     interface SamsviMdmSidebar {
     }
     interface SamsviMdmStats {
@@ -190,6 +209,7 @@ declare namespace LocalJSX {
         "samsvi-mdm-patient-list": SamsviMdmPatientList;
         "samsvi-mdm-patient-modal": SamsviMdmPatientModal;
         "samsvi-mdm-patients-table": SamsviMdmPatientsTable;
+        "samsvi-mdm-record-modal": SamsviMdmRecordModal;
         "samsvi-mdm-sidebar": SamsviMdmSidebar;
         "samsvi-mdm-stats": SamsviMdmStats;
         "samsvi-mdm-table-controls": SamsviMdmTableControls;
@@ -206,6 +226,7 @@ declare module "@stencil/core" {
             "samsvi-mdm-patient-list": LocalJSX.SamsviMdmPatientList & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientListElement>;
             "samsvi-mdm-patient-modal": LocalJSX.SamsviMdmPatientModal & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientModalElement>;
             "samsvi-mdm-patients-table": LocalJSX.SamsviMdmPatientsTable & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientsTableElement>;
+            "samsvi-mdm-record-modal": LocalJSX.SamsviMdmRecordModal & JSXBase.HTMLAttributes<HTMLSamsviMdmRecordModalElement>;
             "samsvi-mdm-sidebar": LocalJSX.SamsviMdmSidebar & JSXBase.HTMLAttributes<HTMLSamsviMdmSidebarElement>;
             "samsvi-mdm-stats": LocalJSX.SamsviMdmStats & JSXBase.HTMLAttributes<HTMLSamsviMdmStatsElement>;
             "samsvi-mdm-table-controls": LocalJSX.SamsviMdmTableControls & JSXBase.HTMLAttributes<HTMLSamsviMdmTableControlsElement>;

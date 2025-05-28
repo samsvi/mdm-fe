@@ -6,6 +6,12 @@ import { Component, Host, h } from '@stencil/core';
   shadow: true,
 })
 export class SamsviMdmSidebar {
+  handlePatients() {
+    const url = `/`;
+
+    window.navigation?.navigate(url);
+  }
+
   render() {
     return (
       <Host>
@@ -17,25 +23,9 @@ export class SamsviMdmSidebar {
             </div>
 
             <div class="menu-items">
-              <div class="menu-item">
-                <md-icon>dashboard</md-icon>
-                <span>Dashboard</span>
-              </div>
-              <div class="menu-item">
-                <md-icon>event</md-icon>
-                <span>Appointment</span>
-              </div>
-              <div class="menu-item active">
+              <div class="menu-item active" onClick={this.handlePatients}>
                 <md-icon>person</md-icon>
-                <span>Patient</span>
-              </div>
-              <div class="menu-item">
-                <md-icon>bar_chart</md-icon>
-                <span>Report</span>
-              </div>
-              <div class="menu-item">
-                <md-icon>local_hospital</md-icon>
-                <span>Clinic</span>
+                <span>Patients</span>
               </div>
             </div>
 

@@ -24,7 +24,10 @@ export class SamsviMdmPatientsTable {
   }
 
   handleViewDetails(patient: any) {
-    console.log('Viewing patient details:', patient);
+    const id = patient.id;
+    const url = `/patient/${id}`;
+
+    window.navigation?.navigate(url);
     this.openedMenuPatientId = null;
   }
 

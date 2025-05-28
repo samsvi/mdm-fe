@@ -11,6 +11,11 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   position: relative;
   transition: transform 0.3s ease;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 .sidebar-content {
@@ -26,7 +31,7 @@
   align-items: center;
   padding: 0 20px 20px;
   margin-bottom: 10px;
-  color: var(--md-sys-color-primary, #0066cc);
+  color: #0066cc;
 }
 
 .logo md-icon {
@@ -60,14 +65,14 @@
 
 .menu-item:hover {
   background-color: #f0f7ff;
-  color: var(--md-sys-color-primary, #0066cc);
+  color: #0066cc;
 }
 
 .menu-item.active {
   background-color: #e6f2ff;
-  color: var(--md-sys-color-primary, #0066cc);
+  color: #0066cc;
   font-weight: 500;
-  border-left: 3px solid var(--md-sys-color-primary, #0066cc);
+  border-left: 3px solid #0066cc;
 }
 
 .menu-item md-icon {
@@ -88,7 +93,7 @@
   right: -40px;
   width: 40px;
   height: 40px;
-  background-color: var(--md-sys-color-primary, #0066cc);
+  background-color: #0066cc;
   color: white;
   border-radius: 0 4px 4px 0;
   justify-content: center;
