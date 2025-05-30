@@ -1,0 +1,12 @@
+.openapi-generator-ignore
+apis/MedicalRecordsApi.ts
+apis/PatientsApi.ts
+apis/index.ts
+index.ts
+models/Address.ts
+models/EmergencyContact.ts
+models/MedicalRecord.ts
+models/Medication.ts
+models/Patient.ts
+models/index.ts
+runtime.ts
