@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
  *
  * @export
@@ -145,10 +145,10 @@ export function instanceOfPatient(value: object): boolean {
 }
 
 export function PatientFromJSON(json: any): Patient {
-  return PatientFromJSONTyped(json, false);
+  return PatientFromJSONTyped(json);
 }
 
-export function PatientFromJSONTyped(json: any, ignoreDiscriminator: boolean): Patient {
+export function PatientFromJSONTyped(json: any): Patient {
   if (json === undefined || json === null) {
     return json;
   }

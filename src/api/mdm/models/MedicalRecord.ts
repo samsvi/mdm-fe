@@ -12,9 +12,9 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 import type { Medication } from './Medication';
-import { MedicationFromJSON, MedicationFromJSONTyped, MedicationToJSON } from './Medication';
+import { MedicationFromJSON, MedicationToJSON } from './Medication';
 
 /**
  *
@@ -110,10 +110,10 @@ export function instanceOfMedicalRecord(value: object): boolean {
 }
 
 export function MedicalRecordFromJSON(json: any): MedicalRecord {
-  return MedicalRecordFromJSONTyped(json, false);
+  return MedicalRecordFromJSONTyped(json);
 }
 
-export function MedicalRecordFromJSONTyped(json: any, ignoreDiscriminator: boolean): MedicalRecord {
+export function MedicalRecordFromJSONTyped(json: any): MedicalRecord {
   if (json === undefined || json === null) {
     return json;
   }

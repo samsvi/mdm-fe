@@ -12,78 +12,75 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
- * 
+ *
  * @export
  * @interface Medication
  */
 export interface Medication {
-    /**
-     * Name of the medication
-     * @type {string}
-     * @memberof Medication
-     */
-    name?: string;
-    /**
-     * Dosage amount
-     * @type {string}
-     * @memberof Medication
-     */
-    dosage?: string;
-    /**
-     * How often to take the medication
-     * @type {string}
-     * @memberof Medication
-     */
-    frequency?: string;
-    /**
-     * Duration of treatment
-     * @type {string}
-     * @memberof Medication
-     */
-    duration?: string;
+  /**
+   * Name of the medication
+   * @type {string}
+   * @memberof Medication
+   */
+  name?: string;
+  /**
+   * Dosage amount
+   * @type {string}
+   * @memberof Medication
+   */
+  dosage?: string;
+  /**
+   * How often to take the medication
+   * @type {string}
+   * @memberof Medication
+   */
+  frequency?: string;
+  /**
+   * Duration of treatment
+   * @type {string}
+   * @memberof Medication
+   */
+  duration?: string;
 }
 
 /**
  * Check if a given object implements the Medication interface.
  */
-export function instanceOfMedication(value: object): boolean {
-    let isInstance = true;
+export function instanceOfMedication(): boolean {
+  let isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function MedicationFromJSON(json: any): Medication {
-    return MedicationFromJSONTyped(json, false);
+  return MedicationFromJSONTyped(json);
 }
 
-export function MedicationFromJSONTyped(json: any, ignoreDiscriminator: boolean): Medication {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'dosage': !exists(json, 'dosage') ? undefined : json['dosage'],
-        'frequency': !exists(json, 'frequency') ? undefined : json['frequency'],
-        'duration': !exists(json, 'duration') ? undefined : json['duration'],
-    };
+export function MedicationFromJSONTyped(json: any): Medication {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    name: !exists(json, 'name') ? undefined : json['name'],
+    dosage: !exists(json, 'dosage') ? undefined : json['dosage'],
+    frequency: !exists(json, 'frequency') ? undefined : json['frequency'],
+    duration: !exists(json, 'duration') ? undefined : json['duration'],
+  };
 }
 
 export function MedicationToJSON(value?: Medication | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'name': value.name,
-        'dosage': value.dosage,
-        'frequency': value.frequency,
-        'duration': value.duration,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    name: value.name,
+    dosage: value.dosage,
+    frequency: value.frequency,
+    duration: value.duration,
+  };
 }
-

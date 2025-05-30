@@ -12,78 +12,75 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
- * 
+ *
  * @export
  * @interface Address
  */
 export interface Address {
-    /**
-     * Street name and number
-     * @type {string}
-     * @memberof Address
-     */
-    street?: string;
-    /**
-     * City
-     * @type {string}
-     * @memberof Address
-     */
-    city?: string;
-    /**
-     * Postal code
-     * @type {string}
-     * @memberof Address
-     */
-    postalCode?: string;
-    /**
-     * Country
-     * @type {string}
-     * @memberof Address
-     */
-    country?: string;
+  /**
+   * Street name and number
+   * @type {string}
+   * @memberof Address
+   */
+  street?: string;
+  /**
+   * City
+   * @type {string}
+   * @memberof Address
+   */
+  city?: string;
+  /**
+   * Postal code
+   * @type {string}
+   * @memberof Address
+   */
+  postalCode?: string;
+  /**
+   * Country
+   * @type {string}
+   * @memberof Address
+   */
+  country?: string;
 }
 
 /**
  * Check if a given object implements the Address interface.
  */
-export function instanceOfAddress(value: object): boolean {
-    let isInstance = true;
+export function instanceOfAddress(): boolean {
+  let isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function AddressFromJSON(json: any): Address {
-    return AddressFromJSONTyped(json, false);
+  return AddressFromJSONTyped(json);
 }
 
-export function AddressFromJSONTyped(json: any, ignoreDiscriminator: boolean): Address {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'street': !exists(json, 'street') ? undefined : json['street'],
-        'city': !exists(json, 'city') ? undefined : json['city'],
-        'postalCode': !exists(json, 'postalCode') ? undefined : json['postalCode'],
-        'country': !exists(json, 'country') ? undefined : json['country'],
-    };
+export function AddressFromJSONTyped(json: any): Address {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    street: !exists(json, 'street') ? undefined : json['street'],
+    city: !exists(json, 'city') ? undefined : json['city'],
+    postalCode: !exists(json, 'postalCode') ? undefined : json['postalCode'],
+    country: !exists(json, 'country') ? undefined : json['country'],
+  };
 }
 
 export function AddressToJSON(value?: Address | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'street': value.street,
-        'city': value.city,
-        'postalCode': value.postalCode,
-        'country': value.country,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    street: value.street,
+    city: value.city,
+    postalCode: value.postalCode,
+    country: value.country,
+  };
 }
-

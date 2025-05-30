@@ -12,70 +12,67 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { exists } from '../runtime';
 /**
- * 
+ *
  * @export
  * @interface EmergencyContact
  */
 export interface EmergencyContact {
-    /**
-     * Name of emergency contact
-     * @type {string}
-     * @memberof EmergencyContact
-     */
-    name?: string;
-    /**
-     * Relationship to patient
-     * @type {string}
-     * @memberof EmergencyContact
-     */
-    relationship?: string;
-    /**
-     * Phone number of emergency contact
-     * @type {string}
-     * @memberof EmergencyContact
-     */
-    phoneNumber?: string;
+  /**
+   * Name of emergency contact
+   * @type {string}
+   * @memberof EmergencyContact
+   */
+  name?: string;
+  /**
+   * Relationship to patient
+   * @type {string}
+   * @memberof EmergencyContact
+   */
+  relationship?: string;
+  /**
+   * Phone number of emergency contact
+   * @type {string}
+   * @memberof EmergencyContact
+   */
+  phoneNumber?: string;
 }
 
 /**
  * Check if a given object implements the EmergencyContact interface.
  */
-export function instanceOfEmergencyContact(value: object): boolean {
-    let isInstance = true;
+export function instanceOfEmergencyContact(): boolean {
+  let isInstance = true;
 
-    return isInstance;
+  return isInstance;
 }
 
 export function EmergencyContactFromJSON(json: any): EmergencyContact {
-    return EmergencyContactFromJSONTyped(json, false);
+  return EmergencyContactFromJSONTyped(json);
 }
 
-export function EmergencyContactFromJSONTyped(json: any, ignoreDiscriminator: boolean): EmergencyContact {
-    if ((json === undefined) || (json === null)) {
-        return json;
-    }
-    return {
-        
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'relationship': !exists(json, 'relationship') ? undefined : json['relationship'],
-        'phoneNumber': !exists(json, 'phoneNumber') ? undefined : json['phoneNumber'],
-    };
+export function EmergencyContactFromJSONTyped(json: any): EmergencyContact {
+  if (json === undefined || json === null) {
+    return json;
+  }
+  return {
+    name: !exists(json, 'name') ? undefined : json['name'],
+    relationship: !exists(json, 'relationship') ? undefined : json['relationship'],
+    phoneNumber: !exists(json, 'phoneNumber') ? undefined : json['phoneNumber'],
+  };
 }
 
 export function EmergencyContactToJSON(value?: EmergencyContact | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
-    }
-    return {
-        
-        'name': value.name,
-        'relationship': value.relationship,
-        'phoneNumber': value.phoneNumber,
-    };
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null) {
+    return null;
+  }
+  return {
+    name: value.name,
+    relationship: value.relationship,
+    phoneNumber: value.phoneNumber,
+  };
 }
-
