@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
-import { PatientsApi } from '../../api/mdm/apis/PatientsApi';
+import { PatientsApi, Configuration } from '../../api/mdm';
 
 @Component({
   tag: 'samsvi-mdm-patients-table',
@@ -19,7 +19,14 @@ export class SamsviMdmPatientsTable {
   private patientsApi: PatientsApi;
 
   constructor() {
-    this.patientsApi = new PatientsApi();
+    const isDevelopment = window.location.hostname === 'localhost';
+    const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
+
+    this.patientsApi = new PatientsApi(
+      new Configuration({
+        basePath: apiBaseUrl,
+      }),
+    );
   }
 
   async componentWillLoad() {
