@@ -39,9 +39,7 @@ export class SamsviMdmPatientDetail {
   }
 
   componentWillLoad() {
-    // Inicializácia editablePatient s pôvodnými údajmi
     this.editablePatient = { ...this.patient };
-    // Load medical records
     this.loadMedicalRecords();
   }
 
@@ -51,13 +49,13 @@ export class SamsviMdmPatientDetail {
 
   startEditing = () => {
     this.isEditing = true;
-    this.editablePatient = { ...this.patient }; // Reset changes
+    this.editablePatient = { ...this.patient };
     this.error = null;
   };
 
   cancelEditing = () => {
     this.isEditing = false;
-    this.editablePatient = { ...this.patient }; // Reset changes
+    this.editablePatient = { ...this.patient };
     this.error = null;
   };
 
@@ -68,7 +66,6 @@ export class SamsviMdmPatientDetail {
       this.loading = true;
       this.error = null;
 
-      // Validácia povinných polí
       if (
         !this.editablePatient.firstName ||
         !this.editablePatient.lastName ||
@@ -80,13 +77,11 @@ export class SamsviMdmPatientDetail {
         return;
       }
 
-      // Vytvorenie patient objektu pre API
       const updatedPatient = {
         ...this.editablePatient,
         dateOfBirth: new Date(this.editablePatient.dateOfBirth),
       };
 
-      // Volanie API pre aktualizáciu
       const result = await this.patientsApi.updatePatient({
         patientId: this.patient.id,
         patient: updatedPatient,
@@ -94,11 +89,9 @@ export class SamsviMdmPatientDetail {
 
       console.log('Patient updated successfully:', result);
 
-      // Update local state
       this.patient = { ...this.editablePatient };
       this.isEditing = false;
 
-      // Emit event pre parent komponent
       this.patientUpdated.emit(result);
     } catch (error) {
       console.error('Error updating patient:', error);
@@ -122,12 +115,10 @@ export class SamsviMdmPatientDetail {
 
   formatDateForInput(dateString: string): string {
     if (!dateString) return '';
-    // Convert date to YYYY-MM-DD format for input
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
   }
 
-  // Medical Records Methods
   loadMedicalRecords = async () => {
     if (!this.patient.id) return;
 
@@ -151,7 +142,6 @@ export class SamsviMdmPatientDetail {
     try {
       this.loadingRecords = true;
 
-      // Generovanie jedinečného ID pre record
       const recordId = `rec${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
       const medicalRecord = {
@@ -206,7 +196,6 @@ export class SamsviMdmPatientDetail {
         medicalRecord: updatedRecord,
       });
 
-      // Update local state
       this.medicalRecords = this.medicalRecords.map(r => (r.id === record.id ? result : r));
 
       this.editingRecordId = null;

@@ -25,7 +25,6 @@ export class SamsviMdmPatientModal {
   private patientsApi: PatientsApi;
 
   constructor() {
-    // Automatická detekcia prostredia
     const isDevelopment = window.location.hostname === 'localhost';
     const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
 
@@ -36,9 +35,6 @@ export class SamsviMdmPatientModal {
     );
   }
 
-  /**
-   * Opens the modal dialog
-   */
   @Method()
   async openModal() {
     this.open = true;
@@ -46,9 +42,6 @@ export class SamsviMdmPatientModal {
     this.error = null;
   }
 
-  /**
-   * Closes the modal dialog
-   */
   @Method()
   async closeModal() {
     this.open = false;
@@ -63,10 +56,8 @@ export class SamsviMdmPatientModal {
       this.loading = true;
       this.error = null;
 
-      // Generovanie jedinečného ID
       const patientId = `pat${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
-      // Vytvorenie patient objektu
       const patient = {
         id: patientId,
         firstName: this.firstName,
@@ -82,15 +73,12 @@ export class SamsviMdmPatientModal {
 
       console.log('Creating patient:', patient);
 
-      // Volanie API
       const createdPatient = await this.patientsApi.createPatient({ patient });
 
       console.log('Patient created successfully:', createdPatient);
 
-      // Emitovanie eventu pre parent komponent
       this.patientCreated.emit(createdPatient);
 
-      // Zatvorenie modalu a reset formu
       await this.closeModal();
       this.resetForm();
     } catch (error) {
@@ -173,10 +161,10 @@ export class SamsviMdmPatientModal {
                       <md-select-option value="O-">O-</md-select-option>
                     </md-filled-select>
 
-                    <md-filled-select label="Status" value={this.status} onSelect={(e: any) => (this.status = e.target.value)}>
+                    <md-filled-select label="Status" value={this.status} onInput={(e: any) => (this.status = e.target.value)}>
                       <md-select-option value="Stable">Stable</md-select-option>
-                      <md-select-option value="Recovering">Recovering</md-select-option>
-                      <md-select-option value="Critical">Discharged</md-select-option>
+                      <md-select-option value="Mild">Mild</md-select-option>
+                      <md-select-option value="Critical">Critical</md-select-option>
                     </md-filled-select>
                   </div>
 
@@ -200,8 +188,12 @@ export class SamsviMdmPatientModal {
                 </div>
 
                 <div slot="actions">
-                  <md-filled-button onClick={() => this.closeModal()}>Cancel</md-filled-button>
-                  <md-filled-button type="submit">Save Patient</md-filled-button>
+                  <md-filled-button type="button" onClick={() => this.closeModal()}>
+                    Cancel
+                  </md-filled-button>
+                  <md-filled-button type="submit" disabled={this.loading}>
+                    {this.loading ? 'Saving...' : 'Save Patient'}
+                  </md-filled-button>
                 </div>
               </form>
             </md-dialog>

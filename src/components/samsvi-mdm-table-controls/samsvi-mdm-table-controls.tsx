@@ -9,6 +9,7 @@ export class SamsviMdmTableControls {
   @Prop() selectedStatus: string = 'all';
   @Element() el: HTMLElement;
   @Event() statusFilterChanged: EventEmitter<string>;
+  @Event() searchInput: EventEmitter<string>;
 
   handleStatusChange(event) {
     this.statusFilterChanged.emit(event.target.value);
@@ -21,16 +22,20 @@ export class SamsviMdmTableControls {
     }
   };
 
+  handleSearchInput = event => {
+    this.searchInput.emit(event);
+  };
+
   render() {
     return (
       <Host>
         <div class="table-controls">
-          <md-filled-text-field placeholder="Search patient..." type="search" class="patient-search">
+          <md-filled-text-field placeholder="Search patient..." type="search" class="patient-search" onInput={this.handleSearchInput}>
             <md-icon slot="leading">search</md-icon>
           </md-filled-text-field>
 
           <div class="table-actions">
-            <md-filled-select class="status-select" value={this.selectedStatus} onSelect={e => this.handleStatusChange(e)}>
+            <md-filled-select class="status-select" value={this.selectedStatus} onChange={e => this.handleStatusChange(e)}>
               <md-select-option value="all" selected={this.selectedStatus === 'all'}>
                 All Status
               </md-select-option>

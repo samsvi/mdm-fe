@@ -29,7 +29,7 @@ export class SamsviMdmStats {
           <div class="stat-card">
             <div class="stat-info">
               <h2>{this.mildPatients}</h2>
-              <p>Mild patients</p>
+              <p>Recovering patients</p>
             </div>
             <md-standard-icon-button class="icon-mild">
               <md-icon>healing</md-icon>

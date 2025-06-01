@@ -64,21 +64,25 @@ export class SamsviMdmMainContent {
   }
 
   @Listen('patientCreated')
-  async patientCreatedHandler() {
+  async patientCreatedHandler(event: CustomEvent) {
+    console.log('Patient created event received:', event.detail);
     // Reload patients when new patient is created
     await this.loadPatients();
   }
 
+  @Listen('searchInput')
+  searchInputHandler(event: CustomEvent) {
+    this.handleSearchInput(event.detail);
+  }
+
   @Listen('patientSelected')
   patientSelectedHandler(event: CustomEvent) {
-    // Handle navigation type events from patients table
     if (event.detail.type === 'navigate') {
       this.selectedPatient = event.detail.patient;
       this.showPatientDetail = true;
       return;
     }
 
-    // Handle view-detail type events
     if (event.detail.type === 'view-detail') {
       this.selectedPatient = event.detail.patient;
       this.showPatientDetail = true;
@@ -135,7 +139,6 @@ export class SamsviMdmMainContent {
   }
 
   render() {
-    // If showing patient detail, render only the detail component
     if (this.showPatientDetail && this.selectedPatient) {
       return (
         <Host>

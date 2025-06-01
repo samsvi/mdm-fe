@@ -88,10 +88,6 @@ export class SamsviMdmPatientsTable {
                 <span class="detail-value">{this.calculateAge(patient.dateOfBirth)}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Dátum narodenia:</span>
-                <span class="detail-value">{patient.dateOfBirth || 'N/A'}</span>
-              </div>
-              <div class="detail-row">
                 <span class="detail-label">Pohlavie:</span>
                 <span class="detail-value">{patient.gender || 'N/A'}</span>
               </div>
