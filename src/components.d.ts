@@ -59,6 +59,10 @@ export interface SamsviMdmPatientDetailCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSamsviMdmPatientDetailElement;
 }
+export interface SamsviMdmPatientModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSamsviMdmPatientModalElement;
+}
 export interface SamsviMdmPatientsTableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSamsviMdmPatientsTableElement;
@@ -109,7 +113,18 @@ declare global {
         prototype: HTMLSamsviMdmPatientListElement;
         new (): HTMLSamsviMdmPatientListElement;
     };
+    interface HTMLSamsviMdmPatientModalElementEventMap {
+        "patientCreated": any;
+    }
     interface HTMLSamsviMdmPatientModalElement extends Components.SamsviMdmPatientModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSamsviMdmPatientModalElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientModalElement, ev: SamsviMdmPatientModalCustomEvent<HTMLSamsviMdmPatientModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSamsviMdmPatientModalElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientModalElement, ev: SamsviMdmPatientModalCustomEvent<HTMLSamsviMdmPatientModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLSamsviMdmPatientModalElement: {
         prototype: HTMLSamsviMdmPatientModalElement;
@@ -196,6 +211,7 @@ declare namespace LocalJSX {
     interface SamsviMdmPatientList {
     }
     interface SamsviMdmPatientModal {
+        "onPatientCreated"?: (event: SamsviMdmPatientModalCustomEvent<any>) => void;
     }
     interface SamsviMdmPatientsTable {
         "isMobileView"?: boolean;

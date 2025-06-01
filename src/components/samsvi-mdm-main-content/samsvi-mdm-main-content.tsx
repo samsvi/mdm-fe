@@ -1,4 +1,5 @@
 import { Component, h, Host, State, Listen } from '@stencil/core';
+import { PatientsApi, Configuration } from '../../api/mdm';
 
 @Component({
   tag: 'samsvi-mdm-main-content',
@@ -6,54 +7,49 @@ import { Component, h, Host, State, Listen } from '@stencil/core';
   shadow: true,
 })
 export class SamsviMdmMainContent {
-  @State() patients = [
-    {
-      id: 1,
-      name: 'Willy Ben Chen',
-      lastAppointment: '10-04-2025',
-      age: 27,
-      dateOfBirth: '10-02-1998',
-      gender: 'Male',
-      diagnosis: 'Diabetes',
-      status: 'Stable',
-    },
-    {
-      id: 2,
-      name: 'Emily Watford',
-      lastAppointment: '09-04-2025',
-      age: 37,
-      dateOfBirth: '20-01-1988',
-      gender: 'Female',
-      diagnosis: 'Hypertension',
-      status: 'Critical',
-    },
-    {
-      id: 3,
-      name: 'Nicholas Robertson',
-      lastAppointment: '08-04-2025',
-      age: 25,
-      dateOfBirth: '24-06-1999',
-      gender: 'Male',
-      diagnosis: 'Anxiety Disorder',
-      status: 'Stable',
-    },
-  ];
-
-  @State() totalPatients = 352;
-  @State() mildPatients = 180;
-  @State() stablePatients = 150;
-  @State() criticalPatients = 22;
+  @State() patients: any[] = [];
+  @State() loading = true;
+  @State() error: string | null = null;
   @State() searchQuery = '';
   @State() selectedStatus = 'all';
   @State() isMobileView = false;
 
-  componentWillLoad() {
+  private patientsApi: PatientsApi;
+  private patientModal: HTMLSamsviMdmPatientModalElement;
+
+  constructor() {
+    const isDevelopment = window.location.hostname === 'localhost';
+    const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
+
+    this.patientsApi = new PatientsApi(
+      new Configuration({
+        basePath: apiBaseUrl,
+      }),
+    );
+  }
+
+  async componentWillLoad() {
     this.checkScreenSize();
     window.addEventListener('resize', this.checkScreenSize.bind(this));
+    await this.loadPatients();
   }
 
   disconnectedCallback() {
     window.removeEventListener('resize', this.checkScreenSize.bind(this));
+  }
+
+  async loadPatients() {
+    try {
+      this.loading = true;
+      this.error = null;
+      const patients = await this.patientsApi.getAllPatients();
+      this.patients = patients;
+    } catch (error) {
+      console.error('Error loading patients:', error);
+      this.error = 'Error loading patients. Please try again later.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   checkScreenSize() {
@@ -65,13 +61,32 @@ export class SamsviMdmMainContent {
     this.selectedStatus = event.detail;
   }
 
+  @Listen('patientCreated')
+  async patientCreatedHandler() {
+    // Reload patients when new patient is created
+    await this.loadPatients();
+  }
+
+  @Listen('patientSelected')
+  patientSelectedHandler(event: CustomEvent) {
+    if (event.detail === 'refresh') {
+      this.loadPatients();
+    }
+    // Handle patient selection/details view
+  }
+
   handleSearchInput(event) {
     this.searchQuery = event.target.value.toLowerCase();
   }
 
+  handleAddPatient = () => {
+    this.patientModal?.openModal();
+  };
+
   get filteredPatients() {
     return this.patients.filter(patient => {
-      const matchesSearch = patient.name.toLowerCase().includes(this.searchQuery) || patient.diagnosis.toLowerCase().includes(this.searchQuery);
+      const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
+      const matchesSearch = fullName.includes(this.searchQuery) || (patient.medicalNotes && patient.medicalNotes.toLowerCase().includes(this.searchQuery));
 
       const matchesStatus = this.selectedStatus === 'all' || patient.status.toLowerCase() === this.selectedStatus.toLowerCase();
 
@@ -79,23 +94,55 @@ export class SamsviMdmMainContent {
     });
   }
 
+  get patientStats() {
+    const total = this.patients.length;
+    const stable = this.patients.filter(p => p.status?.toLowerCase() === 'stable').length;
+    const mild = this.patients.filter(p => p.status?.toLowerCase() === 'mild').length;
+    const critical = this.patients.filter(p => p.status?.toLowerCase() === 'critical').length;
+
+    return { total, stable, mild, critical };
+  }
+
   render() {
+    const stats = this.patientStats;
+
+    if (this.loading) {
+      return (
+        <Host>
+          <div class="loading-container">
+            <md-circular-progress indeterminate></md-circular-progress>
+            <p>Loading patients...</p>
+          </div>
+        </Host>
+      );
+    }
+
     return (
       <Host>
         <div class="main-content">
           <samsvi-mdm-header></samsvi-mdm-header>
 
           <samsvi-mdm-stats
-            totalPatients={this.totalPatients}
-            mildPatients={this.mildPatients}
-            stablePatients={this.stablePatients}
-            criticalPatients={this.criticalPatients}
+            totalPatients={stats.total}
+            mildPatients={stats.mild}
+            stablePatients={stats.stable}
+            criticalPatients={stats.critical}
             isMobileView={this.isMobileView}
           ></samsvi-mdm-stats>
 
           <samsvi-mdm-table-controls onInput={e => this.handleSearchInput(e)} selectedStatus={this.selectedStatus}></samsvi-mdm-table-controls>
 
           <samsvi-mdm-patients-table patients={this.filteredPatients} isMobileView={this.isMobileView}></samsvi-mdm-patients-table>
+
+          <samsvi-mdm-patient-modal ref={el => (this.patientModal = el)}></samsvi-mdm-patient-modal>
+
+          {this.error && (
+            <div class="error-banner">
+              <md-icon>error</md-icon>
+              <span>{this.error}</span>
+              <md-button onClick={() => this.loadPatients()}>Retry</md-button>
+            </div>
+          )}
         </div>
       </Host>
     );

@@ -1,4 +1,5 @@
-import { Component, Host, h, State, Method } from '@stencil/core';
+import { Component, Host, h, State, Method, Event, EventEmitter } from '@stencil/core';
+import { PatientsApi, Configuration } from '../../api/mdm';
 
 @Component({
   tag: 'samsvi-mdm-patient-modal',
@@ -16,6 +17,24 @@ export class SamsviMdmPatientModal {
   @State() status = 'stable';
   @State() allergies = '';
   @State() notes = '';
+  @State() loading = false;
+  @State() error: string | null = null;
+
+  @Event() patientCreated: EventEmitter<any>;
+
+  private patientsApi: PatientsApi;
+
+  constructor() {
+    // Automatická detekcia prostredia
+    const isDevelopment = window.location.hostname === 'localhost';
+    const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
+
+    this.patientsApi = new PatientsApi(
+      new Configuration({
+        basePath: apiBaseUrl,
+      }),
+    );
+  }
 
   /**
    * Opens the modal dialog
@@ -23,6 +42,8 @@ export class SamsviMdmPatientModal {
   @Method()
   async openModal() {
     this.open = true;
+    this.resetForm();
+    this.error = null;
   }
 
   /**
@@ -33,31 +54,51 @@ export class SamsviMdmPatientModal {
     this.open = false;
   }
 
-  private handleSubmit = (e: Event) => {
+  private handleSubmit = async (e: Event) => {
     e.preventDefault();
 
-    // Create patient object from form data
-    const patient = {
-      firstName: this.firstName,
-      lastName: this.lastName,
-      dateOfBirth: this.dateOfBirth,
-      gender: this.gender,
-      insuranceNumber: this.insuranceNumber,
-      bloodType: this.bloodType,
-      status: this.status,
-      allergies: this.allergies,
-      notes: this.notes,
-    };
+    if (this.loading) return;
 
-    // Here you would typically dispatch an event with the patient data
-    // or call a service to save the patient
-    console.log('Creating patient:', patient);
+    try {
+      this.loading = true;
+      this.error = null;
 
-    // Close the modal after submission
-    this.closeModal();
+      // Generovanie jedinečného ID
+      const patientId = `pat${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
-    // Reset form
-    this.resetForm();
+      // Vytvorenie patient objektu
+      const patient = {
+        id: patientId,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        dateOfBirth: new Date(this.dateOfBirth),
+        gender: this.gender as any,
+        insuranceNumber: this.insuranceNumber,
+        bloodType: this.bloodType as any,
+        status: this.status as any,
+        allergies: this.allergies,
+        medicalNotes: this.notes,
+      };
+
+      console.log('Creating patient:', patient);
+
+      // Volanie API
+      const createdPatient = await this.patientsApi.createPatient({ patient });
+
+      console.log('Patient created successfully:', createdPatient);
+
+      // Emitovanie eventu pre parent komponent
+      this.patientCreated.emit(createdPatient);
+
+      // Zatvorenie modalu a reset formu
+      await this.closeModal();
+      this.resetForm();
+    } catch (error) {
+      console.error('Error creating patient:', error);
+      this.error = error.message || 'Chyba pri vytváraní pacienta. Skúste to znovu.';
+    } finally {
+      this.loading = false;
+    }
   };
 
   private resetForm() {

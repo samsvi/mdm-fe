@@ -11,9 +11,6 @@ export class SamsviMdmPatientsTable {
   @Prop() isMobileView: boolean = false;
   @Event() patientSelected: EventEmitter<string>;
 
-  @State() internalPatients: any[] = [];
-  @State() loading: boolean = true;
-  @State() error: string | null = null;
   @State() openedMenuPatientId: string | null = null;
 
   private patientsApi: PatientsApi;
@@ -29,38 +26,16 @@ export class SamsviMdmPatientsTable {
     );
   }
 
-  async componentWillLoad() {
-    await this.loadPatients();
-  }
-
-  async loadPatients() {
-    try {
-      this.loading = true;
-      this.error = null;
-      const patients = await this.patientsApi.getAllPatients();
-      this.internalPatients = patients;
-    } catch (error) {
-      console.error('Error loading patients:', error);
-      this.error = 'Error loading patients. Please try again later.';
-    } finally {
-      this.loading = false;
-    }
-  }
-
   handleActionClick(patientId: string) {
     this.openedMenuPatientId = this.openedMenuPatientId === patientId ? null : patientId;
   }
 
   async handleDelete(patient: any) {
-    const confirmed = window.confirm(`Naozaj chcete vymazať pacienta ${patient.name || patient.firstName + ' ' + patient.lastName}?`);
+    const confirmed = window.confirm(`Naozaj chcete vymazať pacienta ${patient.firstName + ' ' + patient.lastName}?`);
     if (confirmed) {
       try {
         await this.patientsApi.deletePatient({ patientId: patient.id });
-        if (this.patients.length === 0) {
-          await this.loadPatients();
-        } else {
-          this.patientSelected.emit('refresh');
-        }
+        this.patientSelected.emit('refresh');
         console.log('Patient deleted successfully');
       } catch (error) {
         console.error('Error deleting patient:', error);
@@ -94,25 +69,23 @@ export class SamsviMdmPatientsTable {
   }
 
   renderMobileView() {
-    const patientsToRender = this.patients.length > 0 ? this.patients : this.internalPatients;
-
     return (
       <div class="patients-cards">
-        {patientsToRender.map(patient => (
+        {this.patients.map(patient => (
           <div class="patient-card" key={patient.id}>
             <div class="patient-header">
-              <div class="patient-name">{patient.name || `${patient.firstName} ${patient.lastName}`}</div>
+              <div class="patient-name">{`${patient.firstName} ${patient.lastName}`}</div>
               <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Aktívny'}</span>
             </div>
 
             <div class="patient-details">
               <div class="detail-row">
                 <span class="detail-label">Posledná návšteva:</span>
-                <span class="detail-value">{patient.lastAppointment || patient.lastVisit || 'N/A'}</span>
+                <span class="detail-value">N/A</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Vek:</span>
-                <span class="detail-value">{patient.age || this.calculateAge(patient.dateOfBirth)}</span>
+                <span class="detail-value">{this.calculateAge(patient.dateOfBirth)}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Dátum narodenia:</span>
@@ -123,8 +96,8 @@ export class SamsviMdmPatientsTable {
                 <span class="detail-value">{patient.gender || 'N/A'}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Diagnóza:</span>
-                <span class="detail-value">{patient.diagnosis || patient.primaryDiagnosis || 'N/A'}</span>
+                <span class="detail-label">Alergie:</span>
+                <span class="detail-value">{patient.allergies || 'N/A'}</span>
               </div>
             </div>
 
@@ -136,8 +109,6 @@ export class SamsviMdmPatientsTable {
   }
 
   renderDesktopView() {
-    const patientsToRender = this.patients.length > 0 ? this.patients : this.internalPatients;
-
     return (
       <table>
         <thead>
@@ -146,27 +117,27 @@ export class SamsviMdmPatientsTable {
               <md-checkbox></md-checkbox>
             </th>
             <th>Meno</th>
-            <th>Posledná návšteva</th>
             <th>Vek</th>
             <th>Dátum narodenia</th>
             <th>Pohlavie</th>
-            <th>Diagnóza</th>
+            <th>Rodné číslo</th>
+            <th>Krvná skupina</th>
             <th>Stav</th>
             <th>Akcie</th>
           </tr>
         </thead>
         <tbody>
-          {patientsToRender.map(patient => (
+          {this.patients.map(patient => (
             <tr key={patient.id}>
               <td>
                 <md-checkbox></md-checkbox>
               </td>
-              <td>{patient.name || `${patient.firstName} ${patient.lastName}`}</td>
-              <td>{patient.lastAppointment || patient.lastVisit || 'N/A'}</td>
-              <td>{patient.age || this.calculateAge(patient.dateOfBirth)}</td>
+              <td>{`${patient.firstName} ${patient.lastName}`}</td>
+              <td>{this.calculateAge(patient.dateOfBirth)}</td>
               <td>{patient.dateOfBirth || 'N/A'}</td>
               <td>{patient.gender || 'N/A'}</td>
-              <td>{patient.diagnosis || patient.primaryDiagnosis || 'N/A'}</td>
+              <td>{patient.insuranceNumber || 'N/A'}</td>
+              <td>{patient.bloodType || 'N/A'}</td>
               <td>
                 <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Aktívny'}</span>
               </td>
@@ -191,33 +162,10 @@ export class SamsviMdmPatientsTable {
   }
 
   render() {
-    if (this.loading) {
-      return (
-        <Host>
-          <div class="loading-container">
-            <md-circular-progress indeterminate></md-circular-progress>
-            <p>Načítavam pacientov...</p>
-          </div>
-        </Host>
-      );
-    }
-
-    if (this.error) {
-      return (
-        <Host>
-          <div class="error-container">
-            <md-icon>error</md-icon>
-            <p>{this.error}</p>
-            <md-filled-button onClick={() => this.loadPatients()}>Skúsiť znovu</md-filled-button>
-          </div>
-        </Host>
-      );
-    }
-
     return (
       <Host>
         <div class="patients-table">
-          {this.patients.length === 0 && this.internalPatients.length === 0 ? (
+          {this.patients.length === 0 ? (
             <div class="empty-state">
               <md-icon>person_off</md-icon>
               <p>Žiadni pacienti neboli nájdení</p>
