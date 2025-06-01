@@ -47,6 +47,12 @@ md-filled-button {
 
 .full-width {
   grid-column: 1 / -1;
+  margin-bottom: 1rem; /* Added margin between full-width fields */
+}
+
+/* Remove margin from the last full-width element to avoid extra space at bottom */
+.full-width:last-child {
+  margin-bottom: 0;
 }
 
 .error-message {

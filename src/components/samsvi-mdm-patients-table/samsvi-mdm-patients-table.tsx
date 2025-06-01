@@ -1,4 +1,4 @@
-import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
+import { Component, Host, h, Prop, State, Event, EventEmitter, Listen } from '@stencil/core';
 import { PatientsApi, Configuration } from '../../api/mdm';
 
 @Component({
@@ -26,12 +26,23 @@ export class SamsviMdmPatientsTable {
     );
   }
 
-  handleActionClick(patientId: string) {
+  // Close menu when clicking outside
+  @Listen('click', { target: 'document' })
+  handleDocumentClick(event: MouseEvent) {
+    const target = event.target as Element;
+    if (!target.closest('.actions-container')) {
+      this.openedMenuPatientId = null;
+    }
+  }
+
+  handleActionClick(patientId: string, event: MouseEvent) {
+    event.stopPropagation(); // Prevent document click from closing immediately
     this.openedMenuPatientId = this.openedMenuPatientId === patientId ? null : patientId;
   }
 
-  async handleDelete(patient: any) {
-    const confirmed = window.confirm(`Naozaj chcete vymazať pacienta ${patient.firstName + ' ' + patient.lastName}?`);
+  async handleDelete(patient: any, event: MouseEvent) {
+    event.stopPropagation();
+    const confirmed = window.confirm(`Are you sure you want to delete patient ${patient.firstName + ' ' + patient.lastName}?`);
     if (confirmed) {
       try {
         await this.patientsApi.deletePatient({ patientId: patient.id });
@@ -39,13 +50,14 @@ export class SamsviMdmPatientsTable {
         console.log('Patient deleted successfully');
       } catch (error) {
         console.error('Error deleting patient:', error);
-        alert('Chyba pri mazaní pacienta');
+        alert('Error deleting patient');
       }
     }
     this.openedMenuPatientId = null;
   }
 
-  handleViewDetails(patient: any) {
+  handleViewDetails(patient: any, event: MouseEvent) {
+    event.stopPropagation();
     this.patientSelected.emit({ type: 'navigate', url: `/patients/${patient.id}`, patient: patient });
     this.openedMenuPatientId = null;
   }
@@ -55,13 +67,13 @@ export class SamsviMdmPatientsTable {
 
     return (
       <div class="actions-container">
-        <md-standard-icon-button onClick={() => this.handleActionClick(patient.id)}>
-          <md-icon>more_horiz</md-icon>
+        <md-standard-icon-button onClick={e => this.handleActionClick(patient.id, e)}>
+          <md-icon>more_vert</md-icon>
         </md-standard-icon-button>
         {isOpen && (
           <div class="action-menu">
-            <button onClick={() => this.handleViewDetails(patient)}>Zobraziť detail</button>
-            <button onClick={() => this.handleDelete(patient)}>Vymazať</button>
+            <button onClick={e => this.handleViewDetails(patient, e)}>Show details</button>
+            <button onClick={e => this.handleDelete(patient, e)}>Delete</button>
           </div>
         )}
       </div>
@@ -75,25 +87,25 @@ export class SamsviMdmPatientsTable {
           <div class="patient-card" key={patient.id}>
             <div class="patient-header">
               <div class="patient-name">{`${patient.firstName} ${patient.lastName}`}</div>
-              <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Aktívny'}</span>
+              <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Active'}</span>
             </div>
 
             <div class="patient-details">
               <div class="detail-row">
-                <span class="detail-label">Posledná návšteva:</span>
+                <span class="detail-label">Last visit:</span>
                 <span class="detail-value">N/A</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Vek:</span>
+                <span class="detail-label">Age:</span>
                 <span class="detail-value">{this.calculateAge(patient.dateOfBirth)}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Pohlavie:</span>
-                <span class="detail-value">{patient.gender || 'N/A'}</span>
+                <span class="detail-label">Gender:</span>
+                <span class="detail-value">{this.getGenderDisplay(patient.gender)}</span>
               </div>
               <div class="detail-row">
-                <span class="detail-label">Alergie:</span>
-                <span class="detail-value">{patient.allergies || 'N/A'}</span>
+                <span class="detail-label">Allergies:</span>
+                <span class="detail-value">{patient.allergies || 'None'}</span>
               </div>
             </div>
 
@@ -112,14 +124,14 @@ export class SamsviMdmPatientsTable {
             <th>
               <md-checkbox></md-checkbox>
             </th>
-            <th>Meno</th>
-            <th>Vek</th>
-            <th>Dátum narodenia</th>
-            <th>Pohlavie</th>
-            <th>Rodné číslo</th>
-            <th>Krvná skupina</th>
-            <th>Stav</th>
-            <th>Akcie</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Date of birth</th>
+            <th>Gender</th>
+            <th>Insurance Number</th>
+            <th>Blood type</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -128,14 +140,16 @@ export class SamsviMdmPatientsTable {
               <td>
                 <md-checkbox></md-checkbox>
               </td>
-              <td>{`${patient.firstName} ${patient.lastName}`}</td>
+              <td>
+                <strong>{`${patient.firstName} ${patient.lastName}`}</strong>
+              </td>
               <td>{this.calculateAge(patient.dateOfBirth)}</td>
-              <td>{patient.dateOfBirth || 'N/A'}</td>
-              <td>{patient.gender || 'N/A'}</td>
+              <td>{this.formatDate(patient.dateOfBirth)}</td>
+              <td>{this.getGenderDisplay(patient.gender)}</td>
               <td>{patient.insuranceNumber || 'N/A'}</td>
               <td>{patient.bloodType || 'N/A'}</td>
               <td>
-                <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Aktívny'}</span>
+                <span class={`status-badge ${(patient.status || 'active').toLowerCase()}`}>{patient.status || 'Active'}</span>
               </td>
               <td>{this.renderActions(patient)}</td>
             </tr>
@@ -157,6 +171,29 @@ export class SamsviMdmPatientsTable {
     return age.toString();
   }
 
+  formatDate(dateString: string): string {
+    if (!dateString || dateString === 'undefined') return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('sk-SK');
+    } catch {
+      return 'N/A';
+    }
+  }
+
+  getGenderDisplay(gender: string): string {
+    switch (gender) {
+      case 'M':
+        return 'Male';
+      case 'F':
+        return 'Female';
+      case 'O':
+        return 'Other';
+      default:
+        return 'N/A';
+    }
+  }
+
   render() {
     return (
       <Host>
@@ -164,7 +201,7 @@ export class SamsviMdmPatientsTable {
           {this.patients.length === 0 ? (
             <div class="empty-state">
               <md-icon>person_off</md-icon>
-              <p>Žiadni pacienti neboli nájdení</p>
+              <p>No patients were found.</p>
             </div>
           ) : this.isMobileView ? (
             this.renderMobileView()

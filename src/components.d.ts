@@ -147,6 +147,7 @@ declare global {
     interface HTMLSamsviMdmTableControlsElementEventMap {
         "statusFilterChanged": string;
         "searchInput": string;
+        "addPatientClicked": void;
     }
     interface HTMLSamsviMdmTableControlsElement extends Components.SamsviMdmTableControls, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSamsviMdmTableControlsElementEventMap>(type: K, listener: (this: HTMLSamsviMdmTableControlsElement, ev: SamsviMdmTableControlsCustomEvent<HTMLSamsviMdmTableControlsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -208,6 +209,7 @@ declare namespace LocalJSX {
         "totalPatients"?: number;
     }
     interface SamsviMdmTableControls {
+        "onAddPatientClicked"?: (event: SamsviMdmTableControlsCustomEvent<void>) => void;
         "onSearchInput"?: (event: SamsviMdmTableControlsCustomEvent<string>) => void;
         "onStatusFilterChanged"?: (event: SamsviMdmTableControlsCustomEvent<string>) => void;
         "selectedStatus"?: string;

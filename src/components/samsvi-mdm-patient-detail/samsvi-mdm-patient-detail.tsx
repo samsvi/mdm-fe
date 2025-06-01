@@ -244,18 +244,18 @@ export class SamsviMdmPatientDetail {
               <div class="header-controls">
                 <md-filled-button onClick={() => this.close.emit()}>
                   <md-icon slot="icon">arrow_back</md-icon>
-                  Späť na zoznam
+                  Back to patients list
                 </md-filled-button>
 
                 {!this.isEditing ? (
                   <md-filled-button onClick={this.startEditing}>
                     <md-icon slot="icon">edit</md-icon>
-                    Editovať
+                    Edit
                   </md-filled-button>
                 ) : (
                   <div class="edit-controls">
                     <md-outlined-button onClick={this.cancelEditing} disabled={this.loading}>
-                      Zrušiť
+                      Cancel
                     </md-outlined-button>
                     <md-filled-button onClick={this.saveChanges} disabled={this.loading}>
                       {this.loading ? 'Ukladá sa...' : 'Uložiť'}
@@ -275,11 +275,11 @@ export class SamsviMdmPatientDetail {
             </section>
 
             <section class="basic-info">
-              <h2>Základné informácie</h2>
+              <h2>Basic info</h2>
 
               <div class="info-grid">
                 <md-filled-text-field
-                  label="Meno"
+                  label="First Name"
                   value={displayPatient.firstName || ''}
                   readonly={!this.isEditing}
                   required={this.isEditing}
@@ -287,7 +287,7 @@ export class SamsviMdmPatientDetail {
                 ></md-filled-text-field>
 
                 <md-filled-text-field
-                  label="Priezvisko"
+                  label="Last Name"
                   value={displayPatient.lastName || ''}
                   readonly={!this.isEditing}
                   required={this.isEditing}
@@ -295,7 +295,7 @@ export class SamsviMdmPatientDetail {
                 ></md-filled-text-field>
 
                 <md-filled-text-field
-                  label="Dátum narodenia"
+                  label="Date of Birth"
                   type="date"
                   value={this.formatDateForInput(displayPatient.dateOfBirth)}
                   readonly={!this.isEditing}
@@ -303,17 +303,17 @@ export class SamsviMdmPatientDetail {
                   onInput={(e: any) => this.handleInputChange('dateOfBirth', e.target.value)}
                 ></md-filled-text-field>
 
-                <md-filled-text-field label="Vek" value={this.calculateAge(displayPatient.dateOfBirth)} readonly={true}></md-filled-text-field>
+                <md-filled-text-field label="Age" value={this.calculateAge(displayPatient.dateOfBirth)} readonly={true}></md-filled-text-field>
 
                 {this.isEditing ? (
-                  <md-filled-select label="Pohlavie" required value={displayPatient.gender || ''} onInput={(e: any) => this.handleInputChange('gender', e.target.value)}>
+                  <md-filled-select label="Gender" required value={displayPatient.gender || ''} onInput={(e: any) => this.handleInputChange('gender', e.target.value)}>
                     <md-select-option value="M">Male</md-select-option>
                     <md-select-option value="F">Female</md-select-option>
                     <md-select-option value="O">Other</md-select-option>
                   </md-filled-select>
                 ) : (
                   <md-filled-text-field
-                    label="Pohlavie"
+                    label="Gender"
                     value={
                       displayPatient.gender === 'M' ? 'Male' : displayPatient.gender === 'F' ? 'Female' : displayPatient.gender === 'O' ? 'Other' : displayPatient.gender || ''
                     }
@@ -322,7 +322,7 @@ export class SamsviMdmPatientDetail {
                 )}
 
                 <md-filled-text-field
-                  label="Rodné číslo"
+                  label="Insurance Number"
                   value={displayPatient.insuranceNumber || ''}
                   readonly={!this.isEditing}
                   required={this.isEditing}
@@ -330,7 +330,7 @@ export class SamsviMdmPatientDetail {
                 ></md-filled-text-field>
 
                 {this.isEditing ? (
-                  <md-filled-select label="Krvná skupina" value={displayPatient.bloodType || ''} onInput={(e: any) => this.handleInputChange('bloodType', e.target.value)}>
+                  <md-filled-select label="Blood type" value={displayPatient.bloodType || ''} onInput={(e: any) => this.handleInputChange('bloodType', e.target.value)}>
                     <md-select-option value="">-- Select --</md-select-option>
                     <md-select-option value="A+">A+</md-select-option>
                     <md-select-option value="A-">A-</md-select-option>
@@ -342,22 +342,22 @@ export class SamsviMdmPatientDetail {
                     <md-select-option value="O-">O-</md-select-option>
                   </md-filled-select>
                 ) : (
-                  <md-filled-text-field label="Krvná skupina" value={displayPatient.bloodType || ''} readonly={true}></md-filled-text-field>
+                  <md-filled-text-field label="Blood type" value={displayPatient.bloodType || ''} readonly={true}></md-filled-text-field>
                 )}
 
                 {this.isEditing ? (
-                  <md-filled-select label="Stav" value={displayPatient.status || ''} onInput={(e: any) => this.handleInputChange('status', e.target.value)}>
+                  <md-filled-select label="Status" value={displayPatient.status || ''} onInput={(e: any) => this.handleInputChange('status', e.target.value)}>
                     <md-select-option value="Stable">Stable</md-select-option>
                     <md-select-option value="Recovering">Mild</md-select-option>
                     <md-select-option value="Critical">Critical</md-select-option>
                   </md-filled-select>
                 ) : (
-                  <md-filled-text-field label="Stav" value={displayPatient.status || ''} readonly={true}></md-filled-text-field>
+                  <md-filled-text-field label="Status" value={displayPatient.status || ''} readonly={true}></md-filled-text-field>
                 )}
               </div>
 
               <md-filled-text-field
-                label="Alergie"
+                label="Allergies"
                 type="textarea"
                 rows={3}
                 value={displayPatient.allergies || ''}
@@ -367,7 +367,7 @@ export class SamsviMdmPatientDetail {
               ></md-filled-text-field>
 
               <md-filled-text-field
-                label="Lekárske poznámky"
+                label="Medical Notes"
                 type="textarea"
                 rows={4}
                 value={displayPatient.medicalNotes || ''}
@@ -378,7 +378,7 @@ export class SamsviMdmPatientDetail {
             </section>
 
             <section class="records">
-              <h2>Lekárske záznamy</h2>
+              <h2>Medical records</h2>
 
               {/* Add new record */}
               <div class="add-record">
@@ -389,15 +389,15 @@ export class SamsviMdmPatientDetail {
                   class="record-input"
                 ></md-filled-text-field>
                 <md-filled-button onClick={this.addRecord} disabled={this.loadingRecords || !this.newRecord.trim()}>
-                  Pridať záznam
+                  Add record
                 </md-filled-button>
               </div>
 
               {/* Records list */}
               {this.loadingRecords ? (
-                <div class="loading-message">Načítavajú sa záznamy...</div>
+                <div class="loading-message">Loading records...</div>
               ) : this.medicalRecords.length === 0 ? (
-                <div class="no-records">Žiadne lekárske záznamy.</div>
+                <div class="no-records">No medical records.</div>
               ) : (
                 <div class="records-list">
                   {this.medicalRecords.map(record => (
@@ -408,10 +408,10 @@ export class SamsviMdmPatientDetail {
                           {this.editingRecordId === record.id ? (
                             <div class="edit-actions">
                               <md-outlined-button onClick={this.cancelEditingRecord} disabled={this.loadingRecords}>
-                                Zrušiť
+                                Cancel
                               </md-outlined-button>
                               <md-filled-button onClick={() => this.saveRecord(record)} disabled={this.loadingRecords || !this.editingRecordText.trim()}>
-                                Uložiť
+                                Save
                               </md-filled-button>
                             </div>
                           ) : (
