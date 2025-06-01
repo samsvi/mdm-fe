@@ -60,6 +60,126 @@ md-filled-button {
   margin-bottom: 1rem;
 }
 
-md-outlined-text-field[readonly] {
-  --md-outlined-text-field-container-color: #f5f5f5;
+/* Medical Records Styles */
+.records {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.add-record {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.record-input {
+  flex: 1;
+  min-width: 300px;
+}
+
+.loading-message,
+.no-records {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.record-item {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.record-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.record-date {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #666;
+  background-color: #e3f2fd;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.record-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.record-content {
+  margin-top: 0.75rem;
+}
+
+.record-text {
+  margin: 0;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  line-height: 1.5;
+  color: #333;
+}
+
+md-icon-button {
+  --md-icon-button-size: 36px;
+  --md-icon-button-icon-size: 20px;
+}
+
+md-icon-button[data-action='edit'] {
+  --md-icon-button-icon-color: #1976d2;
+}
+
+md-icon-button[data-action='delete'] {
+  --md-icon-button-icon-color: #d32f2f;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .add-record {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .record-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .record-actions {
+    align-self: flex-end;
+  }
 }

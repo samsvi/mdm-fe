@@ -162,60 +162,85 @@ export class SamsviMdmPatientDetail {
               <h2>Základné informácie</h2>
 
               <div class="info-grid">
-                <md-outlined-text-field
+                <md-filled-text-field
                   label="Meno"
                   value={displayPatient.firstName || ''}
                   readonly={!this.isEditing}
+                  required={this.isEditing}
                   onInput={(e: any) => this.handleInputChange('firstName', e.target.value)}
-                ></md-outlined-text-field>
+                ></md-filled-text-field>
 
-                <md-outlined-text-field
+                <md-filled-text-field
                   label="Priezvisko"
                   value={displayPatient.lastName || ''}
                   readonly={!this.isEditing}
+                  required={this.isEditing}
                   onInput={(e: any) => this.handleInputChange('lastName', e.target.value)}
-                ></md-outlined-text-field>
+                ></md-filled-text-field>
 
-                <md-outlined-text-field
+                <md-filled-text-field
                   label="Dátum narodenia"
                   type="date"
                   value={this.formatDateForInput(displayPatient.dateOfBirth)}
                   readonly={!this.isEditing}
+                  required={this.isEditing}
                   onInput={(e: any) => this.handleInputChange('dateOfBirth', e.target.value)}
-                ></md-outlined-text-field>
+                ></md-filled-text-field>
 
-                <md-outlined-text-field label="Vek" value={this.calculateAge(displayPatient.dateOfBirth)} readonly={true}></md-outlined-text-field>
+                <md-filled-text-field label="Vek" value={this.calculateAge(displayPatient.dateOfBirth)} readonly={true}></md-filled-text-field>
 
-                <md-outlined-text-field
-                  label="Pohlavie"
-                  value={displayPatient.gender || ''}
-                  readonly={!this.isEditing}
-                  onInput={(e: any) => this.handleInputChange('gender', e.target.value)}
-                ></md-outlined-text-field>
+                {this.isEditing ? (
+                  <md-filled-select label="Pohlavie" required value={displayPatient.gender || ''} onInput={(e: any) => this.handleInputChange('gender', e.target.value)}>
+                    <md-select-option value="M">Male</md-select-option>
+                    <md-select-option value="F">Female</md-select-option>
+                    <md-select-option value="O">Other</md-select-option>
+                  </md-filled-select>
+                ) : (
+                  <md-filled-text-field
+                    label="Pohlavie"
+                    value={
+                      displayPatient.gender === 'M' ? 'Male' : displayPatient.gender === 'F' ? 'Female' : displayPatient.gender === 'O' ? 'Other' : displayPatient.gender || ''
+                    }
+                    readonly={true}
+                  ></md-filled-text-field>
+                )}
 
-                <md-outlined-text-field
+                <md-filled-text-field
                   label="Rodné číslo"
                   value={displayPatient.insuranceNumber || ''}
                   readonly={!this.isEditing}
+                  required={this.isEditing}
                   onInput={(e: any) => this.handleInputChange('insuranceNumber', e.target.value)}
-                ></md-outlined-text-field>
+                ></md-filled-text-field>
 
-                <md-outlined-text-field
-                  label="Krvná skupina"
-                  value={displayPatient.bloodType || ''}
-                  readonly={!this.isEditing}
-                  onInput={(e: any) => this.handleInputChange('bloodType', e.target.value)}
-                ></md-outlined-text-field>
+                {this.isEditing ? (
+                  <md-filled-select label="Krvná skupina" value={displayPatient.bloodType || ''} onInput={(e: any) => this.handleInputChange('bloodType', e.target.value)}>
+                    <md-select-option value="">-- Select --</md-select-option>
+                    <md-select-option value="A+">A+</md-select-option>
+                    <md-select-option value="A-">A-</md-select-option>
+                    <md-select-option value="B+">B+</md-select-option>
+                    <md-select-option value="B-">B-</md-select-option>
+                    <md-select-option value="AB+">AB+</md-select-option>
+                    <md-select-option value="AB-">AB-</md-select-option>
+                    <md-select-option value="O+">O+</md-select-option>
+                    <md-select-option value="O-">O-</md-select-option>
+                  </md-filled-select>
+                ) : (
+                  <md-filled-text-field label="Krvná skupina" value={displayPatient.bloodType || ''} readonly={true}></md-filled-text-field>
+                )}
 
-                <md-outlined-text-field
-                  label="Stav"
-                  value={displayPatient.status || ''}
-                  readonly={!this.isEditing}
-                  onInput={(e: any) => this.handleInputChange('status', e.target.value)}
-                ></md-outlined-text-field>
+                {this.isEditing ? (
+                  <md-filled-select label="Stav" value={displayPatient.status || ''} onInput={(e: any) => this.handleInputChange('status', e.target.value)}>
+                    <md-select-option value="Stable">Stable</md-select-option>
+                    <md-select-option value="Recovering">Recovering</md-select-option>
+                    <md-select-option value="Critical">Critical</md-select-option>
+                  </md-filled-select>
+                ) : (
+                  <md-filled-text-field label="Stav" value={displayPatient.status || ''} readonly={true}></md-filled-text-field>
+                )}
               </div>
 
-              <md-outlined-text-field
+              <md-filled-text-field
                 label="Alergie"
                 type="textarea"
                 rows={3}
@@ -223,9 +248,9 @@ export class SamsviMdmPatientDetail {
                 readonly={!this.isEditing}
                 onInput={(e: any) => this.handleInputChange('allergies', e.target.value)}
                 class="full-width"
-              ></md-outlined-text-field>
+              ></md-filled-text-field>
 
-              <md-outlined-text-field
+              <md-filled-text-field
                 label="Lekárske poznámky"
                 type="textarea"
                 rows={4}
@@ -233,7 +258,7 @@ export class SamsviMdmPatientDetail {
                 readonly={!this.isEditing}
                 onInput={(e: any) => this.handleInputChange('medicalNotes', e.target.value)}
                 class="full-width"
-              ></md-outlined-text-field>
+              ></md-filled-text-field>
             </section>
             {/* <section class="records">
               <h3>Lekárske záznamy</h3>
