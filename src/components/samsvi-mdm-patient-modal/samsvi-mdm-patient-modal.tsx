@@ -14,7 +14,7 @@ export class SamsviMdmPatientModal {
   @State() gender = '';
   @State() insuranceNumber = '';
   @State() bloodType = '';
-  @State() status = 'stable';
+  @State() status = 'Stable';
   @State() allergies = '';
   @State() notes = '';
   @State() loading = false;
@@ -123,6 +123,13 @@ export class SamsviMdmPatientModal {
 
               <form onSubmit={this.handleSubmit}>
                 <div slot="content" class="modal-content">
+                  {this.error && (
+                    <div class="error-message" style={{ color: 'red', marginBottom: '16px' }}>
+                      <md-icon>error</md-icon>
+                      <span>{this.error}</span>
+                    </div>
+                  )}
+
                   <div class="form-row">
                     <md-filled-text-field label="First Name" required value={this.firstName} onInput={(e: any) => (this.firstName = e.target.value)}></md-filled-text-field>
 
@@ -139,9 +146,9 @@ export class SamsviMdmPatientModal {
                     ></md-filled-text-field>
 
                     <md-filled-select label="Gender" required value={this.gender} onSelect={(e: any) => (this.gender = e.target.value)}>
-                      <md-select-option value="male">Male</md-select-option>
-                      <md-select-option value="female">Female</md-select-option>
-                      <md-select-option value="other">Other</md-select-option>
+                      <md-select-option value="M">Male</md-select-option> {/* ✅ M namiesto male */}
+                      <md-select-option value="F">Female</md-select-option> {/* ✅ F namiesto female */}
+                      <md-select-option value="O">Other</md-select-option> {/* ✅ O namiesto other */}
                     </md-filled-select>
                   </div>
 
@@ -155,6 +162,7 @@ export class SamsviMdmPatientModal {
 
                   <div class="form-row">
                     <md-filled-select label="Blood Type" value={this.bloodType} onSelect={(e: any) => (this.bloodType = e.target.value)}>
+                      <md-select-option value="">-- Select --</md-select-option> {/* ✅ Prázdna možnosť */}
                       <md-select-option value="A+">A+</md-select-option>
                       <md-select-option value="A-">A-</md-select-option>
                       <md-select-option value="B+">B+</md-select-option>
@@ -166,9 +174,10 @@ export class SamsviMdmPatientModal {
                     </md-filled-select>
 
                     <md-filled-select label="Status" value={this.status} onSelect={(e: any) => (this.status = e.target.value)}>
-                      <md-select-option value="stable">Stable</md-select-option>
-                      <md-select-option value="mild">Mild</md-select-option>
-                      <md-select-option value="critical">Critical</md-select-option>
+                      <md-select-option value="Stable">Stable</md-select-option> {/* ✅ Stable namiesto stable */}
+                      <md-select-option value="Critical">Critical</md-select-option> {/* ✅ Critical namiesto critical */}
+                      <md-select-option value="Recovering">Recovering</md-select-option> {/* ✅ Nová možnosť */}
+                      <md-select-option value="Discharged">Discharged</md-select-option> {/* ✅ Nová možnosť */}
                     </md-filled-select>
                   </div>
 
