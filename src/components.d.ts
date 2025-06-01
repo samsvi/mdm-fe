@@ -14,7 +14,7 @@ export namespace Components {
     interface SamsviMdmMainContent {
     }
     interface SamsviMdmPatientDetail {
-        "patientId": string;
+        "patient": any;
     }
     interface SamsviMdmPatientList {
     }
@@ -92,6 +92,7 @@ declare global {
     };
     interface HTMLSamsviMdmPatientDetailElementEventMap {
         "close": void;
+        "patientUpdated": any;
     }
     interface HTMLSamsviMdmPatientDetailElement extends Components.SamsviMdmPatientDetail, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSamsviMdmPatientDetailElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientDetailElement, ev: SamsviMdmPatientDetailCustomEvent<HTMLSamsviMdmPatientDetailElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -131,7 +132,7 @@ declare global {
         new (): HTMLSamsviMdmPatientModalElement;
     };
     interface HTMLSamsviMdmPatientsTableElementEventMap {
-        "patientSelected": string;
+        "patientSelected": any;
     }
     interface HTMLSamsviMdmPatientsTableElement extends Components.SamsviMdmPatientsTable, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSamsviMdmPatientsTableElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientsTableElement, ev: SamsviMdmPatientsTableCustomEvent<HTMLSamsviMdmPatientsTableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -206,7 +207,8 @@ declare namespace LocalJSX {
     }
     interface SamsviMdmPatientDetail {
         "onClose"?: (event: SamsviMdmPatientDetailCustomEvent<void>) => void;
-        "patientId"?: string;
+        "onPatientUpdated"?: (event: SamsviMdmPatientDetailCustomEvent<any>) => void;
+        "patient"?: any;
     }
     interface SamsviMdmPatientList {
     }
@@ -215,7 +217,7 @@ declare namespace LocalJSX {
     }
     interface SamsviMdmPatientsTable {
         "isMobileView"?: boolean;
-        "onPatientSelected"?: (event: SamsviMdmPatientsTableCustomEvent<string>) => void;
+        "onPatientSelected"?: (event: SamsviMdmPatientsTableCustomEvent<any>) => void;
         "patients"?: any[];
     }
     interface SamsviMdmRecordModal {

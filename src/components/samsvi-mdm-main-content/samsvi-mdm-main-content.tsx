@@ -13,6 +13,8 @@ export class SamsviMdmMainContent {
   @State() searchQuery = '';
   @State() selectedStatus = 'all';
   @State() isMobileView = false;
+  @State() selectedPatient: any = null;
+  @State() showPatientDetail = false;
 
   private patientsApi: PatientsApi;
   private patientModal: HTMLSamsviMdmPatientModalElement;
@@ -69,10 +71,39 @@ export class SamsviMdmMainContent {
 
   @Listen('patientSelected')
   patientSelectedHandler(event: CustomEvent) {
+    // Handle navigation type events from patients table
+    if (event.detail.type === 'navigate') {
+      this.selectedPatient = event.detail.patient;
+      this.showPatientDetail = true;
+      return;
+    }
+
+    // Handle view-detail type events
+    if (event.detail.type === 'view-detail') {
+      this.selectedPatient = event.detail.patient;
+      this.showPatientDetail = true;
+      return;
+    }
+
+    // Handle refresh requests
     if (event.detail === 'refresh') {
       this.loadPatients();
+      return;
     }
-    // Handle patient selection/details view
+  }
+
+  @Listen('close')
+  handlePatientDetailClose() {
+    this.showPatientDetail = false;
+    this.selectedPatient = null;
+  }
+
+  @Listen('patientUpdated')
+  async handlePatientUpdated() {
+    // Reload patients after update
+    await this.loadPatients();
+    this.showPatientDetail = false;
+    this.selectedPatient = null;
   }
 
   handleSearchInput(event) {
@@ -104,6 +135,15 @@ export class SamsviMdmMainContent {
   }
 
   render() {
+    // If showing patient detail, render only the detail component
+    if (this.showPatientDetail && this.selectedPatient) {
+      return (
+        <Host>
+          <samsvi-mdm-patient-detail patient={this.selectedPatient}></samsvi-mdm-patient-detail>
+        </Host>
+      );
+    }
+
     const stats = this.patientStats;
 
     if (this.loading) {

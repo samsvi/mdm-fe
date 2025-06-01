@@ -9,7 +9,7 @@ import { PatientsApi, Configuration } from '../../api/mdm';
 export class SamsviMdmPatientsTable {
   @Prop() patients: any[] = [];
   @Prop() isMobileView: boolean = false;
-  @Event() patientSelected: EventEmitter<string>;
+  @Event() patientSelected: EventEmitter<any>;
 
   @State() openedMenuPatientId: string | null = null;
 
@@ -46,7 +46,7 @@ export class SamsviMdmPatientsTable {
   }
 
   handleViewDetails(patient: any) {
-    this.patientSelected.emit(patient.id);
+    this.patientSelected.emit({ type: 'navigate', url: `/patients/${patient.id}`, patient: patient });
     this.openedMenuPatientId = null;
   }
 
