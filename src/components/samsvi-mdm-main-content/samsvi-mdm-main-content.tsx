@@ -15,9 +15,10 @@ export class SamsviMdmMainContent {
   @State() isMobileView = false;
   @State() selectedPatient: any = null;
   @State() showPatientDetail = false;
+  @State() showAddPatientForm = false;
 
   private patientsApi: PatientsApi;
-  private patientModal: HTMLSamsviMdmPatientModalElement;
+  private patientForm: HTMLSamsviMdmPatientFormElement;
 
   constructor() {
     const isDevelopment = window.location.hostname === 'localhost';
@@ -65,8 +66,8 @@ export class SamsviMdmMainContent {
 
   @Listen('addPatientClicked')
   addPatientClickedHandler() {
-    console.log('Add patient clicked - opening modal');
-    this.handleAddPatient();
+    console.log('Add patient clicked - showing form');
+    this.showAddPatientForm = true;
   }
 
   @Listen('patientCreated')
@@ -74,6 +75,13 @@ export class SamsviMdmMainContent {
     console.log('Patient created event received:', event.detail);
     // Reload patients when new patient is created
     await this.loadPatients();
+    this.showAddPatientForm = false;
+  }
+
+  @Listen('formClosed')
+  formClosedHandler() {
+    console.log('Form closed');
+    this.showAddPatientForm = false;
   }
 
   @Listen('searchInput')
@@ -120,10 +128,6 @@ export class SamsviMdmMainContent {
     this.searchQuery = event.target.value.toLowerCase();
   }
 
-  handleAddPatient = () => {
-    this.patientModal?.openModal();
-  };
-
   get filteredPatients() {
     return this.patients.filter(patient => {
       const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
@@ -145,10 +149,25 @@ export class SamsviMdmMainContent {
   }
 
   render() {
+    // Show patient detail view
     if (this.showPatientDetail && this.selectedPatient) {
       return (
         <Host>
           <samsvi-mdm-patient-detail patient={this.selectedPatient}></samsvi-mdm-patient-detail>
+        </Host>
+      );
+    }
+
+    // Show add patient form
+    if (this.showAddPatientForm) {
+      return (
+        <Host>
+          <div class="form-layout">
+            <samsvi-mdm-sidebar></samsvi-mdm-sidebar>
+            <div class="form-content">
+              <samsvi-mdm-patient-form ref={el => (this.patientForm = el)}></samsvi-mdm-patient-form>
+            </div>
+          </div>
         </Host>
       );
     }
@@ -179,11 +198,9 @@ export class SamsviMdmMainContent {
             isMobileView={this.isMobileView}
           ></samsvi-mdm-stats>
 
-          <samsvi-mdm-table-controls onInput={e => this.handleSearchInput(e)} selectedStatus={this.selectedStatus}></samsvi-mdm-table-controls>
+          <samsvi-mdm-table-controls selectedStatus={this.selectedStatus}></samsvi-mdm-table-controls>
 
           <samsvi-mdm-patients-table patients={this.filteredPatients} isMobileView={this.isMobileView}></samsvi-mdm-patients-table>
-
-          <samsvi-mdm-patient-modal ref={el => (this.patientModal = el)}></samsvi-mdm-patient-modal>
 
           {this.error && (
             <div class="error-banner">

@@ -16,6 +16,8 @@ export namespace Components {
     interface SamsviMdmPatientDetail {
         "patient": any;
     }
+    interface SamsviMdmPatientForm {
+    }
     interface SamsviMdmPatientList {
     }
     interface SamsviMdmPatientModal {
@@ -42,6 +44,10 @@ export namespace Components {
 export interface SamsviMdmPatientDetailCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSamsviMdmPatientDetailElement;
+}
+export interface SamsviMdmPatientFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSamsviMdmPatientFormElement;
 }
 export interface SamsviMdmPatientModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -91,6 +97,24 @@ declare global {
     var HTMLSamsviMdmPatientDetailElement: {
         prototype: HTMLSamsviMdmPatientDetailElement;
         new (): HTMLSamsviMdmPatientDetailElement;
+    };
+    interface HTMLSamsviMdmPatientFormElementEventMap {
+        "patientCreated": any;
+        "formClosed": void;
+    }
+    interface HTMLSamsviMdmPatientFormElement extends Components.SamsviMdmPatientForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSamsviMdmPatientFormElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientFormElement, ev: SamsviMdmPatientFormCustomEvent<HTMLSamsviMdmPatientFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSamsviMdmPatientFormElementEventMap>(type: K, listener: (this: HTMLSamsviMdmPatientFormElement, ev: SamsviMdmPatientFormCustomEvent<HTMLSamsviMdmPatientFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSamsviMdmPatientFormElement: {
+        prototype: HTMLSamsviMdmPatientFormElement;
+        new (): HTMLSamsviMdmPatientFormElement;
     };
     interface HTMLSamsviMdmPatientListElement extends Components.SamsviMdmPatientList, HTMLStencilElement {
     }
@@ -168,6 +192,7 @@ declare global {
         "samsvi-mdm-header": HTMLSamsviMdmHeaderElement;
         "samsvi-mdm-main-content": HTMLSamsviMdmMainContentElement;
         "samsvi-mdm-patient-detail": HTMLSamsviMdmPatientDetailElement;
+        "samsvi-mdm-patient-form": HTMLSamsviMdmPatientFormElement;
         "samsvi-mdm-patient-list": HTMLSamsviMdmPatientListElement;
         "samsvi-mdm-patient-modal": HTMLSamsviMdmPatientModalElement;
         "samsvi-mdm-patients-table": HTMLSamsviMdmPatientsTableElement;
@@ -188,6 +213,10 @@ declare namespace LocalJSX {
         "onClose"?: (event: SamsviMdmPatientDetailCustomEvent<void>) => void;
         "onPatientUpdated"?: (event: SamsviMdmPatientDetailCustomEvent<any>) => void;
         "patient"?: any;
+    }
+    interface SamsviMdmPatientForm {
+        "onFormClosed"?: (event: SamsviMdmPatientFormCustomEvent<void>) => void;
+        "onPatientCreated"?: (event: SamsviMdmPatientFormCustomEvent<any>) => void;
     }
     interface SamsviMdmPatientList {
     }
@@ -219,6 +248,7 @@ declare namespace LocalJSX {
         "samsvi-mdm-header": SamsviMdmHeader;
         "samsvi-mdm-main-content": SamsviMdmMainContent;
         "samsvi-mdm-patient-detail": SamsviMdmPatientDetail;
+        "samsvi-mdm-patient-form": SamsviMdmPatientForm;
         "samsvi-mdm-patient-list": SamsviMdmPatientList;
         "samsvi-mdm-patient-modal": SamsviMdmPatientModal;
         "samsvi-mdm-patients-table": SamsviMdmPatientsTable;
@@ -235,6 +265,7 @@ declare module "@stencil/core" {
             "samsvi-mdm-header": LocalJSX.SamsviMdmHeader & JSXBase.HTMLAttributes<HTMLSamsviMdmHeaderElement>;
             "samsvi-mdm-main-content": LocalJSX.SamsviMdmMainContent & JSXBase.HTMLAttributes<HTMLSamsviMdmMainContentElement>;
             "samsvi-mdm-patient-detail": LocalJSX.SamsviMdmPatientDetail & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientDetailElement>;
+            "samsvi-mdm-patient-form": LocalJSX.SamsviMdmPatientForm & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientFormElement>;
             "samsvi-mdm-patient-list": LocalJSX.SamsviMdmPatientList & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientListElement>;
             "samsvi-mdm-patient-modal": LocalJSX.SamsviMdmPatientModal & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientModalElement>;
             "samsvi-mdm-patients-table": LocalJSX.SamsviMdmPatientsTable & JSXBase.HTMLAttributes<HTMLSamsviMdmPatientsTableElement>;
