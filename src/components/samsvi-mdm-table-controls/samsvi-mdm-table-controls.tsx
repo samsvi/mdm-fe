@@ -10,16 +10,14 @@ export class SamsviMdmTableControls {
   @Element() el: HTMLElement;
   @Event() statusFilterChanged: EventEmitter<string>;
   @Event() searchInput: EventEmitter<string>;
+  @Event() addPatientClicked: EventEmitter<void>;
 
   handleStatusChange(event) {
     this.statusFilterChanged.emit(event.target.value);
   }
 
   handleAddPatient = () => {
-    const modalElement = document.querySelector('samsvi-mdm-patient-modal') as HTMLElement & { openModal: () => Promise<void> };
-    if (modalElement) {
-      modalElement.openModal();
-    }
+    this.addPatientClicked.emit();
   };
 
   handleSearchInput = event => {

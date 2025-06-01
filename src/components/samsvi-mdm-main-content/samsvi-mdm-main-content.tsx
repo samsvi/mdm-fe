@@ -63,6 +63,12 @@ export class SamsviMdmMainContent {
     this.selectedStatus = event.detail;
   }
 
+  @Listen('addPatientClicked')
+  addPatientClickedHandler() {
+    console.log('Add patient clicked - opening modal');
+    this.handleAddPatient();
+  }
+
   @Listen('patientCreated')
   async patientCreatedHandler(event: CustomEvent) {
     console.log('Patient created event received:', event.detail);
