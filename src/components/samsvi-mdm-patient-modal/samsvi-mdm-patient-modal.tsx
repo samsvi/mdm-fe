@@ -108,7 +108,7 @@ export class SamsviMdmPatientModal {
     this.gender = '';
     this.insuranceNumber = '';
     this.bloodType = '';
-    this.status = 'stable';
+    this.status = 'Stable';
     this.allergies = '';
     this.notes = '';
   }
