@@ -18,7 +18,6 @@ export class SamsviMdmMainContent {
   @State() showAddPatientForm = false;
 
   private patientsApi: PatientsApi;
-  private patientForm: HTMLSamsviMdmPatientFormElement;
 
   constructor() {
     const isDevelopment = window.location.hostname === 'localhost';
@@ -165,7 +164,7 @@ export class SamsviMdmMainContent {
           <div class="form-layout">
             <samsvi-mdm-sidebar></samsvi-mdm-sidebar>
             <div class="form-content">
-              <samsvi-mdm-patient-form ref={el => (this.patientForm = el)}></samsvi-mdm-patient-form>
+              <samsvi-mdm-patient-form></samsvi-mdm-patient-form>
             </div>
           </div>
         </Host>
