@@ -348,7 +348,7 @@ export class SamsviMdmPatientDetail {
                 {this.isEditing ? (
                   <md-filled-select label="Stav" value={displayPatient.status || ''} onInput={(e: any) => this.handleInputChange('status', e.target.value)}>
                     <md-select-option value="Stable">Stable</md-select-option>
-                    <md-select-option value="Recovering">Recovering</md-select-option>
+                    <md-select-option value="Recovering">Mild</md-select-option>
                     <md-select-option value="Critical">Critical</md-select-option>
                   </md-filled-select>
                 ) : (
