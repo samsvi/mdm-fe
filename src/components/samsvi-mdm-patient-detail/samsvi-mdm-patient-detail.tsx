@@ -1,5 +1,5 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
-import { PatientsApi, Configuration } from '../../api/mdm';
+import { PatientsApi, MedicalRecordsApi, Configuration } from '../../api/mdm';
 
 @Component({
   tag: 'samsvi-mdm-patient-detail',
@@ -16,22 +16,33 @@ export class SamsviMdmPatientDetail {
   @State() loading = false;
   @State() error: string | null = null;
 
+  // Medical records state
+  @State() medicalRecords: any[] = [];
+  @State() loadingRecords = false;
+  @State() newRecord = '';
+  @State() editingRecordId: string | null = null;
+  @State() editingRecordText = '';
+
   private patientsApi: PatientsApi;
+  private medicalRecordsApi: MedicalRecordsApi;
 
   constructor() {
     const isDevelopment = window.location.hostname === 'localhost';
     const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
 
-    this.patientsApi = new PatientsApi(
-      new Configuration({
-        basePath: apiBaseUrl,
-      }),
-    );
+    const config = new Configuration({
+      basePath: apiBaseUrl,
+    });
+
+    this.patientsApi = new PatientsApi(config);
+    this.medicalRecordsApi = new MedicalRecordsApi(config);
   }
 
   componentWillLoad() {
     // Inicializácia editablePatient s pôvodnými údajmi
     this.editablePatient = { ...this.patient };
+    // Load medical records
+    this.loadMedicalRecords();
   }
 
   handleInputChange(field: string, value: string) {
@@ -114,6 +125,122 @@ export class SamsviMdmPatientDetail {
     // Convert date to YYYY-MM-DD format for input
     const date = new Date(dateString);
     return date.toISOString().split('T')[0];
+  }
+
+  // Medical Records Methods
+  loadMedicalRecords = async () => {
+    if (!this.patient.id) return;
+
+    try {
+      this.loadingRecords = true;
+      const records = await this.medicalRecordsApi.getPatientMedicalRecords({
+        patientId: this.patient.id,
+      });
+      this.medicalRecords = records || [];
+    } catch (error) {
+      console.error('Error loading medical records:', error);
+      this.medicalRecords = [];
+    } finally {
+      this.loadingRecords = false;
+    }
+  };
+
+  addRecord = async () => {
+    if (!this.newRecord.trim() || !this.patient.id) return;
+
+    try {
+      this.loadingRecords = true;
+
+      // Generovanie jedinečného ID pre record
+      const recordId = `rec${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+      const medicalRecord = {
+        id: recordId,
+        patientId: this.patient.id,
+        diagnosis: this.newRecord.trim(),
+        treatment: '',
+        notes: '',
+        recordDate: new Date(),
+        dateOfVisit: new Date(),
+      };
+
+      const createdRecord = await this.medicalRecordsApi.createMedicalRecord({
+        patientId: this.patient.id,
+        medicalRecord,
+      });
+
+      this.medicalRecords = [...this.medicalRecords, createdRecord];
+      this.newRecord = '';
+    } catch (error) {
+      console.error('Error adding medical record:', error);
+    } finally {
+      this.loadingRecords = false;
+    }
+  };
+
+  startEditingRecord = (record: any) => {
+    this.editingRecordId = record.id;
+    this.editingRecordText = record.diagnosis || '';
+  };
+
+  cancelEditingRecord = () => {
+    this.editingRecordId = null;
+    this.editingRecordText = '';
+  };
+
+  saveRecord = async (record: any) => {
+    if (!this.editingRecordText.trim()) return;
+
+    try {
+      this.loadingRecords = true;
+
+      const updatedRecord = {
+        ...record,
+        diagnosis: this.editingRecordText.trim(),
+        dateOfVisit: record.dateOfVisit || new Date(),
+      };
+
+      const result = await this.medicalRecordsApi.updateMedicalRecord({
+        patientId: this.patient.id,
+        recordId: record.id,
+        medicalRecord: updatedRecord,
+      });
+
+      // Update local state
+      this.medicalRecords = this.medicalRecords.map(r => (r.id === record.id ? result : r));
+
+      this.editingRecordId = null;
+      this.editingRecordText = '';
+    } catch (error) {
+      console.error('Error updating medical record:', error);
+    } finally {
+      this.loadingRecords = false;
+    }
+  };
+
+  deleteRecord = async (record: any) => {
+    if (!confirm('Ste si istí, že chcete vymazať tento záznam?')) return;
+
+    try {
+      this.loadingRecords = true;
+
+      await this.medicalRecordsApi.deleteMedicalRecord({
+        patientId: this.patient.id,
+        recordId: record.id,
+      });
+
+      this.medicalRecords = this.medicalRecords.filter(r => r.id !== record.id);
+    } catch (error) {
+      console.error('Error deleting medical record:', error);
+    } finally {
+      this.loadingRecords = false;
+    }
+  };
+
+  formatRecordDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('sk-SK');
   }
 
   render() {
@@ -260,16 +387,73 @@ export class SamsviMdmPatientDetail {
                 class="full-width"
               ></md-filled-text-field>
             </section>
-            {/* <section class="records">
-              <h3>Lekárske záznamy</h3>
-              <ul>
-                {this.patient.records.map((record, index) => (
-                  <li key={index}>{record}</li>
-                ))}
-              </ul>
-              <md-outlined-text-field label="Nový záznam" value={this.newRecord} onInput={(e: any) => (this.newRecord = e.target.value)}></md-outlined-text-field>
-              <md-filled-button onClick={() => this.addRecord()}>Pridať záznam</md-filled-button>
-            </section> */}
+
+            <section class="records">
+              <h2>Lekárske záznamy</h2>
+
+              {/* Add new record */}
+              <div class="add-record">
+                <md-filled-text-field
+                  label="Nový záznam"
+                  value={this.newRecord}
+                  onInput={(e: any) => (this.newRecord = e.target.value)}
+                  class="record-input"
+                ></md-filled-text-field>
+                <md-filled-button onClick={this.addRecord} disabled={this.loadingRecords || !this.newRecord.trim()}>
+                  Pridať záznam
+                </md-filled-button>
+              </div>
+
+              {/* Records list */}
+              {this.loadingRecords ? (
+                <div class="loading-message">Načítavajú sa záznamy...</div>
+              ) : this.medicalRecords.length === 0 ? (
+                <div class="no-records">Žiadne lekárske záznamy.</div>
+              ) : (
+                <div class="records-list">
+                  {this.medicalRecords.map(record => (
+                    <div key={record.id} class="record-item">
+                      <div class="record-header">
+                        <span class="record-date">{this.formatRecordDate(record.recordDate)}</span>
+                        <div class="record-actions">
+                          {this.editingRecordId === record.id ? (
+                            <div class="edit-actions">
+                              <md-outlined-button onClick={this.cancelEditingRecord} disabled={this.loadingRecords}>
+                                Zrušiť
+                              </md-outlined-button>
+                              <md-filled-button onClick={() => this.saveRecord(record)} disabled={this.loadingRecords || !this.editingRecordText.trim()}>
+                                Uložiť
+                              </md-filled-button>
+                            </div>
+                          ) : (
+                            <div class="view-actions">
+                              <md-icon-button onClick={() => this.startEditingRecord(record)}>
+                                <md-icon>edit</md-icon>
+                              </md-icon-button>
+                              <md-icon-button onClick={() => this.deleteRecord(record)}>
+                                <md-icon>delete</md-icon>
+                              </md-icon-button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div class="record-content">
+                        {this.editingRecordId === record.id ? (
+                          <md-filled-text-field
+                            value={this.editingRecordText}
+                            onInput={(e: any) => (this.editingRecordText = e.target.value)}
+                            class="full-width"
+                          ></md-filled-text-field>
+                        ) : (
+                          <p class="record-text">{record.diagnosis || 'Bez popisu'}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
         </div>
       </Host>
