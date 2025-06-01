@@ -17,7 +17,7 @@ export class SamsviMdmPatientsTable {
 
   constructor() {
     const isDevelopment = window.location.hostname === 'localhost';
-    const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/api';
+    const apiBaseUrl = isDevelopment ? 'http://localhost:8080/api' : '/mdm-api';
 
     this.patientsApi = new PatientsApi(
       new Configuration({
